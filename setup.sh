@@ -31,14 +31,15 @@ if [ ! -f "$WC/build-static/src/libwhisper.a" ]; then
     cmake --build "$WC/build-static" --config Release -j --target whisper
 fi
 
-# 3) Model
+# 3) Model — avval release'dan (tez), bo'lmasa HuggingFace'dan (har doim ishlaydi)
 if [ ! -f "$MODEL" ]; then
     mkdir -p "$MODELDIR"
-    if [[ "$MODEL_URL" == http* ]]; then
-        echo "==> Model yuklab olinmoqda (release)..."
-        curl -fL --progress-bar -o "$MODEL" "$MODEL_URL"
+    if [[ "$MODEL_URL" == http* ]] && curl -fL --progress-bar -o "$MODEL" "$MODEL_URL"; then
+        echo "==> Model release'dan yuklandi ✓"
     else
-        echo "==> Model HuggingFace'dan konversiya qilinmoqda (biroz vaqt oladi)..."
+        echo "==> Release'dan olinmadi — HuggingFace'dan yuklab konversiya qilinmoqda"
+        echo "    (ochiq model, token shart emas; biroz vaqt oladi)..."
+        rm -f "$MODEL"
         bash "$ROOT/scripts/convert_model.sh"
     fi
 fi
