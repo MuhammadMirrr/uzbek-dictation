@@ -7,7 +7,7 @@ WC="$ROOT/whisper.cpp"
 MODELDIR="$HOME/rubai-stt/models"
 MODEL="$MODELDIR/ggml-rubaistt.bin"
 # Tayyor ggml model (GitHub Release). Bo'sh bo'lsa — HF'dan konversiya qilinadi.
-MODEL_URL="__MODEL_URL__"
+MODEL_URL="https://github.com/MuhammadMirrr/uzbek-dictation/releases/download/v1.0/ggml-rubaistt.bin"
 
 echo "==> RubaiSTT Dictation o'rnatilmoqda"
 
@@ -34,7 +34,7 @@ fi
 # 3) Model
 if [ ! -f "$MODEL" ]; then
     mkdir -p "$MODELDIR"
-    if [ "$MODEL_URL" != "__MODEL_URL__" ]; then
+    if [ "$MODEL_URL" != "https://github.com/MuhammadMirrr/uzbek-dictation/releases/download/v1.0/ggml-rubaistt.bin" ]; then
         echo "==> Model yuklab olinmoqda (release)..."
         curl -fL --progress-bar -o "$MODEL" "$MODEL_URL"
     else
