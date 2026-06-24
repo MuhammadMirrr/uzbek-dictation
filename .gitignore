@@ -1,0 +1,13 @@
+# Build artifacts
+src/*.o
+src/RubaiSTTDictation
+whisper.cpp/
+.venv/
+.assets/
+
+# Model (1.5GB — release orqali yoki konversiya bilan olinadi)
+*.bin
+models/
+
+# macOS
+.DS_Store
