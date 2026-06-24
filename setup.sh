@@ -34,7 +34,7 @@ fi
 # 3) Model
 if [ ! -f "$MODEL" ]; then
     mkdir -p "$MODELDIR"
-    if [ "$MODEL_URL" != "https://github.com/MuhammadMirrr/uzbek-dictation/releases/download/v1.0/ggml-rubaistt.bin" ]; then
+    if [[ "$MODEL_URL" == http* ]]; then
         echo "==> Model yuklab olinmoqda (release)..."
         curl -fL --progress-bar -o "$MODEL" "$MODEL_URL"
     else
