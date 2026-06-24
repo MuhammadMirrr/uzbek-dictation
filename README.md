@@ -26,8 +26,8 @@ macOS'ning o'rnatilgan diktovkasi kabi, lekin **o'zbek tili uchun maxsus**, **bu
 ## 🚀 O'rnatish / Install
 
 ```bash
-git clone https://github.com/__USER__/__REPO__.git
-cd __REPO__
+git clone https://github.com/MuhammadMirrr/uzbek-dictation.git
+cd uzbek-dictation
 ./setup.sh
 ```
 
