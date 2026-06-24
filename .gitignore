@@ -11,3 +11,6 @@ models/
 
 # macOS
 .DS_Store
+
+# Mahalliy eslatma
+NEXT_SESSION.md
