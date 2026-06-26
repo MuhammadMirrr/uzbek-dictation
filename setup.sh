@@ -5,8 +5,9 @@ set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 WC="$ROOT/whisper.cpp"
 MODELDIR="$HOME/rubai-stt/models"
-MODEL="$MODELDIR/ggml-rubaistt.bin"
-# Tayyor ggml model (GitHub Release). Bo'sh bo'lsa — HF'dan konversiya qilinadi.
+MODEL="$MODELDIR/ggml-rubaistt.bin"       # q8_0 (yengil ~820MB) — ilova shu nomdan o'qiydi
+MODEL_F16="$MODELDIR/ggml-rubaistt-f16.bin"
+# Tayyor q8_0 ggml model (GitHub Release). Bo'sh bo'lsa — HF'dan konversiya + quant qilinadi.
 MODEL_URL="https://github.com/MuhammadMirrr/uzbek-dictation/releases/download/v1.0/ggml-rubaistt.bin"
 
 echo "==> RubaiSTT Dictation o'rnatilmoqda"
@@ -31,16 +32,27 @@ if [ ! -f "$WC/build-static/src/libwhisper.a" ]; then
     cmake --build "$WC/build-static" --config Release -j --target whisper
 fi
 
-# 3) Model — avval release'dan (tez), bo'lmasa HuggingFace'dan (har doim ishlaydi)
+# 3) Model — avval release'dan tayyor q8_0 (tez), bo'lmasa HuggingFace'dan + quant
 if [ ! -f "$MODEL" ]; then
     mkdir -p "$MODELDIR"
     if [[ "$MODEL_URL" == http* ]] && curl -fL --progress-bar -o "$MODEL" "$MODEL_URL"; then
-        echo "==> Model release'dan yuklandi ✓"
+        echo "==> Model (q8_0, yengil) release'dan yuklandi ✓"
     else
         echo "==> Release'dan olinmadi — HuggingFace'dan yuklab konversiya qilinmoqda"
         echo "    (ochiq model, token shart emas; biroz vaqt oladi)..."
         rm -f "$MODEL"
+        # f16 ga o'giradi -> $MODEL_F16
         bash "$ROOT/scripts/convert_model.sh"
+        # quantize vositasini build qilib, f16 -> q8_0 ga siqamiz (kamroq RAM/disk)
+        echo "==> Model q8_0 ga quantize qilinmoqda (kamroq RAM)..."
+        if [ ! -x "$WC/build-quant/bin/whisper-quantize" ]; then
+            cmake -S "$WC" -B "$WC/build-quant" \
+                -DWHISPER_BUILD_EXAMPLES=ON -DWHISPER_BUILD_TESTS=OFF \
+                -DGGML_METAL=OFF -DGGML_BLAS=OFF >/dev/null
+            cmake --build "$WC/build-quant" --target whisper-quantize -j
+        fi
+        "$WC/build-quant/bin/whisper-quantize" "$MODEL_F16" "$MODEL" q8_0
+        rm -f "$MODEL_F16"   # f16 zaxira kerak emas — diskni bo'shatamiz
     fi
 fi
 

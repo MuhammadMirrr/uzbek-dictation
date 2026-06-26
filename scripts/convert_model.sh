@@ -25,7 +25,8 @@ mkdir -p "$ROOT/.assets/whisper/assets"
 curl -sL -o "$ROOT/.assets/whisper/assets/mel_filters.npz" \
     https://github.com/openai/whisper/raw/main/whisper/assets/mel_filters.npz
 
-echo "[4/4] ggml'ga o'girish..."
+echo "[4/4] ggml'ga o'girish (f16)..."
 python3 "$WC/models/convert-h5-to-ggml.py" "$SNAP" "$ROOT/.assets" "$OUT"
-mv "$OUT/ggml-model.bin" "$OUT/ggml-rubaistt.bin"
-echo "Tayyor: $OUT/ggml-rubaistt.bin"
+# f16 chiqishi — setup.sh buni q8_0 (yengil) ga quantize qiladi
+mv "$OUT/ggml-model.bin" "$OUT/ggml-rubaistt-f16.bin"
+echo "Tayyor (f16): $OUT/ggml-rubaistt-f16.bin"

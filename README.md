@@ -21,7 +21,7 @@ macOS'ning o'rnatilgan diktovkasi kabi, lekin **o'zbek tili uchun maxsus**, **bu
 - macOS 13+ (**Apple Silicon** — M1/M2/M3/M4/M5)
 - [Homebrew](https://brew.sh)
 - Xcode Command Line Tools (`xcode-select --install`)
-- ~2 GB disk (model 1.5 GB)
+- ~1 GB disk (model ~820 MB, q8_0)
 
 ## 🚀 O'rnatish / Install
 
@@ -57,7 +57,7 @@ Menyu-bardagi 🎙️ ikonadan ham boshqarish mumkin.
 
 ## 🛠 Texnik tafsilotlar
 
-- **Model:** [`islomov/rubaistt_v2_medium`](https://huggingface.co/islomov/rubaistt_v2_medium) → ggml (f16) ga o'girilgan
+- **Model:** [`islomov/rubaistt_v2_medium`](https://huggingface.co/islomov/rubaistt_v2_medium) → ggml **q8_0** (8-bit) ga siqilgan — ~820 MB, ~700 MB kamroq RAM, aniqlik deyarli o'zgarmaydi
 - **Inference:** whisper.cpp + Metal, beam search (maksimal aniqlik)
 - **Til:** `uz`, lotin alifbosi
 - **UI:** Swift / AppKit, menyu-bar (LSUIElement), global hotkey Carbon orqali
