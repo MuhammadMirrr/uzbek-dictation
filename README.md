@@ -28,11 +28,20 @@ macOS'ning o'rnatilgan diktovkasi kabi, lekin **o'zbek tili uchun maxsus**, **bu
 
 ### A) Tayyor ilova (oson) — DMG
 
-1. [Releases](https://github.com/MuhammadMirrr/uzbek-dictation/releases) sahifasidan **RubaiSTT-Dictation.dmg** ni yuklab oling
+1. **[⬇️ RubaiSTT-Dictation.dmg yuklab olish](https://github.com/MuhammadMirrr/uzbek-dictation/releases/download/v1.0/RubaiSTT-Dictation.dmg)** (~785 MB, model ichida)
 2. DMG'ni oching va ilovani **Applications** papkasiga torting
 3. Ilovani ishga tushiring — **Xush kelibsiz** oynasi ikkita ruxsatni (mikrofon + Accessibility) berishda yo'l-yo'riq ko'rsatadi
 
-Ilova **Developer ID bilan imzolangan va Apple tomonidan notarize qilingan** — Gatekeeper bloklamaydi, terminal kerak emas. Model ilova ichida (to'liq oflayn).
+Model ilova ichida — **to'liq oflayn**, terminal kerak emas.
+
+#### Birinchi ochish (muhim)
+
+Ilova **Developer ID bilan imzolangan**, lekin hozircha notarize qilinmagan. Shuning uchun **birinchi marta** macOS ogohlantirishi mumkin (*"Apple cannot check it for malicious software"*). Bir martalik yechim:
+
+- **macOS 13–14:** ilovaga **o'ng tugma (Control-click) → Open → Open**
+- **macOS 15 (Sequoia):** ilovani oching → bloklanadi → **System Settings → Privacy & Security** → pastga tushing → **«Open Anyway» / «Все равно открыть»** → tasdiqlang
+
+Bir marta shunday qilsangiz, keyin doim normal ochiladi.
 
 ### B) Manbadan build (developer)
 
@@ -79,7 +88,7 @@ Natija: `dist/RubaiSTT-Dictation.dmg`. Skript "Developer ID Application" sertifi
 
 ## ⚠️ Eslatma / Notes
 
-- Tayyor DMG **Developer ID bilan imzolangan va notarize qilingan**. Manbadan build (`setup.sh`) esa **ad-hoc imzolangan** (lokal, Gatekeeper bloklamaydi).
+- Tayyor DMG **Developer ID bilan imzolangan** (hardened runtime). Notarize keyinroq qo'shiladi — shu sababli birinchi ochishda yuqoridagi bir martalik qadam kerak. Manbadan build (`setup.sh`) esa **ad-hoc imzolangan** (lokal, Gatekeeper bloklamaydi).
 - App Store'ga **chiqmaydi** — tizim bo'ylab matn yozish (synthetic ⌘V) sandbox'da taqiqlangan; shuning uchun Developer ID orqali tarqatiladi.
 - Faqat **Apple Silicon** (Metal). Intel Mac'lar sinalmagan.
 
