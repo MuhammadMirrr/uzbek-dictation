@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RubaiSTT Diktovka — O'zbekcha ovozli yozuv (macOS)</title>
+<meta name="description" content="Istalgan ilovada ⌃⌥D bosib o'zbekcha gapiring — matn avtomatik yoziladi. Butunlay oflayn, bepul. macOS uchun.">
+<meta property="og:title" content="RubaiSTT Diktovka — O'zbekcha ovozli yozuv">
+<meta property="og:description" content="⌃⌥D bosing → o'zbekcha gapiring → matn yoziladi. Oflayn va bepul.">
+<meta property="og:type" content="website">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg1: #1c2138; --bg2: #332450; --accent: #8b7cf6; --accent2: #6d5ae0;
+    --text: #f4f4fb; --muted: rgba(244,244,251,.62); --card: rgba(255,255,255,.05);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(150deg, var(--bg1), var(--bg2));
+    color: var(--text); min-height: 100vh;
+    -webkit-font-smoothing: antialiased; line-height: 1.5;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 64px 24px 80px; text-align: center; }
+  .icon { width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+  h1 { font-size: 2.6rem; font-weight: 800; margin: 28px 0 10px; letter-spacing: -.02em; }
+  .tag { font-size: 1.2rem; color: var(--muted); max-width: 540px; margin: 0 auto; }
+  .kbd {
+    display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 8px; padding: 1px 9px; font-weight: 700; font-size: .95em;
+  }
+  .badges { margin: 26px 0 38px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .badge { background: var(--card); border: 1px solid rgba(255,255,255,.1); border-radius: 999px;
+    padding: 7px 16px; font-size: .9rem; color: var(--muted); }
+  .dl {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; text-decoration: none; font-size: 1.25rem; font-weight: 700;
+    padding: 18px 40px; border-radius: 16px; box-shadow: 0 14px 40px rgba(109,90,224,.45);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .dl:hover { transform: translateY(-2px); box-shadow: 0 18px 50px rgba(109,90,224,.6); }
+  .dl svg { width: 26px; height: 26px; }
+  .meta { margin-top: 14px; font-size: .9rem; color: var(--muted); }
+  .cards { margin-top: 64px; display: grid; gap: 16px; text-align: left; }
+  @media (min-width: 620px) { .cards { grid-template-columns: 1fr 1fr; } }
+  .card { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 22px 24px; }
+  .card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: .95rem; }
+  .steps { margin-top: 56px; text-align: left; background: var(--card);
+    border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 26px 28px; }
+  .steps h2 { font-size: 1.3rem; margin-bottom: 16px; text-align: center; }
+  .steps ol { margin-left: 20px; }
+  .steps li { margin: 10px 0; color: var(--text); }
+  .steps li span { color: var(--muted); }
+  details { margin-top: 16px; background: rgba(255,200,80,.08); border: 1px solid rgba(255,200,80,.2);
+    border-radius: 12px; padding: 14px 18px; }
+  details summary { cursor: pointer; font-weight: 600; }
+  details p, details ul { color: var(--muted); margin-top: 10px; font-size: .92rem; }
+  details li { margin: 6px 0 6px 18px; }
+  footer { margin-top: 64px; color: var(--muted); font-size: .88rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="icon" src="icon.png" alt="RubaiSTT">
+    <h1>RubaiSTT Diktovka</h1>
+    <p class="tag">Istalgan ilovada <span class="kbd">⌃⌥D</span> bosing → o'zbekcha gapiring → matn o'sha yerga avtomatik yoziladi.</p>
+
+    <div class="badges">
+      <span class="badge">🇺🇿 O'zbek tiliga maxsus</span>
+      <span class="badge">🔌 To'liq oflayn</span>
+      <span class="badge">💸 Bepul</span>
+      <span class="badge">🍎 macOS · Apple Silicon</span>
+    </div>
+
+    <a class="dl" href="https://github.com/MuhammadMirrr/uzbek-dictation/releases/download/v1.0/RubaiSTT-Dictation.dmg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+      Mac uchun yuklab olish
+    </a>
+    <p class="meta">.dmg · ~748 MB · macOS 13+ · Apple Silicon (M1–M5)</p>
+
+    <div class="cards">
+      <div class="card"><h3>🇺🇿 O'zbek tiliga maxsus</h3><p>rubaiSTT modeli, lotin alifbosida aniq transkripsiya.</p></div>
+      <div class="card"><h3>🔌 To'liq oflayn</h3><p>Ovozingiz qurilmangizdan chiqmaydi. Server, internet kerak emas.</p></div>
+      <div class="card"><h3>⚡ Tez</h3><p>Apple Silicon GPU (Metal) tezlashtirishi bilan ishlaydi.</p></div>
+      <div class="card"><h3>⌨️ Sozlanadigan tugma</h3><p>Diktovka tugmasini xohlaganingizcha o'zgartiring (standart ⌃⌥D).</p></div>
+    </div>
+
+    <div class="steps">
+      <h2>Qanday ishlatiladi</h2>
+      <ol>
+        <li>DMG'ni oching va ilovani <strong>Applications</strong>'ga torting</li>
+        <li>Ishga tushiring → mikrofon va Accessibility ruxsatlarini bering</li>
+        <li>Istalgan joyda <span class="kbd">⌃⌥D</span> → <span>🔴 gapiring</span> → <span class="kbd">⌃⌥D</span></li>
+        <li>Matn kursor turgan joyga yoziladi ✍️</li>
+      </ol>
+      <details>
+        <summary>⚠️ Birinchi ochishda ogohlantirish chiqsa</summary>
+        <p>Ilova Developer ID bilan imzolangan, lekin hali Apple notarizatsiyasidan o'tmagan. Birinchi marta:</p>
+        <ul>
+          <li><strong>macOS 13–14:</strong> ilovaga o'ng tugma (Control-click) → <strong>Open</strong> → <strong>Open</strong></li>
+          <li><strong>macOS 15:</strong> System Settings → Privacy &amp; Security → pastga → <strong>«Open Anyway / Все равно открыть»</strong></li>
+        </ul>
+        <p>Bir marta shunday qilsangiz, keyin doim normal ochiladi.</p>
+      </details>
+    </div>
+
+    <footer>
+      Manba kodi va texnik tafsilotlar:
+      <a href="https://github.com/MuhammadMirrr/uzbek-dictation">GitHub</a><br>
+      Model: <a href="https://huggingface.co/islomov/rubaistt_v2_medium">islomov/rubaistt_v2_medium</a> · whisper.cpp
+    </footer>
+  </div>
+</body>
+</html>
