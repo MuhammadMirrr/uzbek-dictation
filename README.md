@@ -15,6 +15,7 @@ macOS'ning o'rnatilgan diktovkasi kabi, lekin **o'zbek tili uchun maxsus**, **bu
 - ⚡ **Metal tezlashtirish** — Apple Silicon GPU'da tez ishlaydi
 - 🔌 **To'liq oflayn** — hech qanday server/internet kerak emas, ovoz qurilmangizdan chiqmaydi
 - 🪶 **Yengil** — menyu-bar ilovasi; model 3 daqiqa ishlatilmasa RAM'dan bo'shaydi
+- ⌨️ **Sozlanadigan tugma** — diktovka tugmasini Sozlamalar oynasidan o'zgartirish mumkin (standart ⌃⌥D)
 
 ## 📋 Talablar / Requirements
 
@@ -24,6 +25,16 @@ macOS'ning o'rnatilgan diktovkasi kabi, lekin **o'zbek tili uchun maxsus**, **bu
 - ~1 GB disk (model ~820 MB, q8_0)
 
 ## 🚀 O'rnatish / Install
+
+### A) Tayyor ilova (oson) — DMG
+
+1. [Releases](https://github.com/MuhammadMirrr/uzbek-dictation/releases) sahifasidan **RubaiSTT-Dictation.dmg** ni yuklab oling
+2. DMG'ni oching va ilovani **Applications** papkasiga torting
+3. Ilovani ishga tushiring — **Xush kelibsiz** oynasi ikkita ruxsatni (mikrofon + Accessibility) berishda yo'l-yo'riq ko'rsatadi
+
+Ilova **Developer ID bilan imzolangan va Apple tomonidan notarize qilingan** — Gatekeeper bloklamaydi, terminal kerak emas. Model ilova ichida (to'liq oflayn).
+
+### B) Manbadan build (developer)
 
 ```bash
 git clone https://github.com/MuhammadMirrr/uzbek-dictation.git
@@ -50,9 +61,26 @@ Birinchi yozishda **mikrofon** ruxsati ham so'raladi — ruxsat bering.
 
 Menyu-bardagi 🎙️ ikonadan ham boshqarish mumkin.
 
+## 📦 Tarqatish / Release (developer)
+
+Imzolangan + notarize qilingan DMG yasash:
+
+```bash
+# Bir martalik: notarize uchun keychain profil
+xcrun notarytool store-credentials rubai-notary \
+    --apple-id "siz@example.com" --team-id "TEAMID" \
+    --password "xxxx-xxxx-xxxx-xxxx"   # app-specific parol
+
+brew install create-dmg     # chiroyli DMG foni uchun (ixtiyoriy)
+./scripts/release.sh        # build → Developer ID imzo → notarize → DMG
+```
+
+Natija: `dist/RubaiSTT-Dictation.dmg`. Skript "Developer ID Application" sertifikatini avtomatik topadi; model `.app` ichiga joylanadi.
+
 ## ⚠️ Eslatma / Notes
 
-- Ilova **ad-hoc imzolangan** (Apple Developer sertifikati yo'q). Shuning uchun manbadan build qilinadi — `setup.sh` lokal build qiladi, Gatekeeper bloklamaydi.
+- Tayyor DMG **Developer ID bilan imzolangan va notarize qilingan**. Manbadan build (`setup.sh`) esa **ad-hoc imzolangan** (lokal, Gatekeeper bloklamaydi).
+- App Store'ga **chiqmaydi** — tizim bo'ylab matn yozish (synthetic ⌘V) sandbox'da taqiqlangan; shuning uchun Developer ID orqali tarqatiladi.
 - Faqat **Apple Silicon** (Metal). Intel Mac'lar sinalmagan.
 
 ## 🛠 Texnik tafsilotlar

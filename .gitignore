@@ -9,6 +9,10 @@ whisper.cpp/
 *.bin
 models/
 
+# Release artefaktlari (DMG, fon — release.sh yasaydi)
+dist/
+assets/dmg-bg.png
+
 # macOS
 .DS_Store
 

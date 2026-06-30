@@ -3,6 +3,7 @@ import AVFoundation
 import AppKit
 import Carbon.HIToolbox
 import ApplicationServices
+import ServiceManagement
 
 // MARK: - Whisper (rubaiSTT) yadrosi
 
@@ -403,6 +404,158 @@ final class SettingsWindow {
     }
 }
 
+// MARK: - Login'da ishga tushirish (SMAppService)
+
+enum LoginItem {
+    static var isEnabled: Bool {
+        if #available(macOS 13.0, *) { return SMAppService.mainApp.status == .enabled }
+        return false
+    }
+    @discardableResult
+    static func set(_ on: Bool) -> Bool {
+        guard #available(macOS 13.0, *) else { return false }
+        do {
+            if on { try SMAppService.mainApp.register() }
+            else  { try SMAppService.mainApp.unregister() }
+            return true
+        } catch {
+            NSLog("[rubai] login item xato: \(error.localizedDescription)")
+            return false
+        }
+    }
+}
+
+// MARK: - Xush kelibsiz / ruxsat onboarding oynasi (birinchi ishga tushishda)
+
+final class WelcomeWindow {
+    private var window: NSWindow?
+    private var statusTimer: Timer?
+    private var micDot: NSTextField!
+    private var axDot: NSTextField!
+    var hotkeyText: String = "⌃⌥D"
+
+    func show() {
+        if window == nil { build() }
+        refreshStatus()
+        NSApp.activate(ignoringOtherApps: true)
+        window!.center()
+        window!.makeKeyAndOrderFront(nil)
+        statusTimer?.invalidate()
+        statusTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.refreshStatus()
+        }
+    }
+
+    private func build() {
+        let W: CGFloat = 460, H: CGFloat = 420
+        let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: W, height: H),
+                         styleMask: [.titled, .closable], backing: .buffered, defer: false)
+        w.title = "RubaiSTT Diktovka"
+        w.isReleasedWhenClosed = false
+        let v = NSView(frame: NSRect(x: 0, y: 0, width: W, height: H))
+
+        // Ikona
+        let iconView = NSImageView(frame: NSRect(x: (W - 72) / 2, y: H - 96, width: 72, height: 72))
+        iconView.image = NSApp.applicationIconImage
+        iconView.imageScaling = .scaleProportionallyUpOrDown
+        v.addSubview(iconView)
+
+        let title = NSTextField(labelWithString: "Xush kelibsiz!")
+        title.font = .systemFont(ofSize: 20, weight: .bold)
+        title.alignment = .center
+        title.frame = NSRect(x: 0, y: H - 130, width: W, height: 26)
+        v.addSubview(title)
+
+        let sub = NSTextField(labelWithString: "Istalgan joyda \(hotkeyText) bosing → o'zbekcha gapiring → matn yoziladi.")
+        sub.font = .systemFont(ofSize: 12)
+        sub.textColor = .secondaryLabelColor
+        sub.alignment = .center
+        sub.frame = NSRect(x: 20, y: H - 152, width: W - 40, height: 18)
+        v.addSubview(sub)
+
+        // 1-qadam: Mikrofon
+        micDot = stepRow(in: v, y: H - 210,
+                         title: "1. Mikrofon ruxsati",
+                         desc: "Ovozingizni eshitish uchun.",
+                         button: "Ruxsat so'rash", action: #selector(askMic))
+        // 2-qadam: Accessibility
+        axDot = stepRow(in: v, y: H - 270,
+                        title: "2. Accessibility ruxsati",
+                        desc: "Matnni faol maydonga yozish uchun (⌘V).",
+                        button: "Sozlamani ochish", action: #selector(openAX))
+
+        // Login'da ishga tushirish
+        let loginCheck = NSButton(checkboxWithTitle: "Kompyuter yonganda avtomatik ishga tushsin",
+                                  target: self, action: #selector(toggleLogin(_:)))
+        loginCheck.state = LoginItem.isEnabled ? .on : .off
+        loginCheck.frame = NSRect(x: 30, y: 70, width: W - 60, height: 20)
+        v.addSubview(loginCheck)
+
+        let done = NSButton(title: "Boshladik!", target: self, action: #selector(closeWindow))
+        done.bezelStyle = .rounded
+        done.keyEquivalent = "\r"
+        done.frame = NSRect(x: W - 150, y: 20, width: 120, height: 32)
+        v.addSubview(done)
+
+        w.contentView = v
+        window = w
+    }
+
+    // Bitta qadam qatori: holat nuqtasi + sarlavha + tugma. Holat nuqtasini qaytaradi.
+    private func stepRow(in parent: NSView, y: CGFloat, title: String, desc: String,
+                         button: String, action: Selector) -> NSTextField {
+        let dot = NSTextField(labelWithString: "○")
+        dot.font = .systemFont(ofSize: 16)
+        dot.frame = NSRect(x: 30, y: y, width: 22, height: 22)
+        parent.addSubview(dot)
+
+        let t = NSTextField(labelWithString: title)
+        t.font = .systemFont(ofSize: 13, weight: .semibold)
+        t.frame = NSRect(x: 54, y: y + 4, width: 240, height: 18)
+        parent.addSubview(t)
+
+        let d = NSTextField(labelWithString: desc)
+        d.font = .systemFont(ofSize: 11)
+        d.textColor = .secondaryLabelColor
+        d.frame = NSRect(x: 54, y: y - 14, width: 260, height: 16)
+        parent.addSubview(d)
+
+        let b = NSButton(title: button, target: self, action: action)
+        b.bezelStyle = .rounded
+        b.frame = NSRect(x: parent.frame.width - 160, y: y - 4, width: 130, height: 28)
+        parent.addSubview(b)
+        return dot
+    }
+
+    private func refreshStatus() {
+        let mic = AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
+        micDot.stringValue = mic ? "✅" : "○"
+        axDot.stringValue = AXIsProcessTrusted() ? "✅" : "○"
+    }
+
+    @objc private func askMic() {
+        AVCaptureDevice.requestAccess(for: .audio) { _ in
+            DispatchQueue.main.async { self.refreshStatus() }
+        }
+    }
+
+    @objc private func openAX() {
+        let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        _ = AXIsProcessTrustedWithOptions(opts)
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+    }
+
+    @objc private func toggleLogin(_ sender: NSButton) {
+        LoginItem.set(sender.state == .on)
+        sender.state = LoginItem.isEnabled ? .on : .off
+    }
+
+    @objc private func closeWindow() {
+        statusTimer?.invalidate(); statusTimer = nil
+        window?.close()
+    }
+}
+
 // MARK: - App
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -413,10 +566,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var idleTimer: Timer?
     private var hkConfig = HotKeyStore.load()
     private var dictateItem: NSMenuItem!
+    private var loginItem: NSMenuItem!
     private lazy var settings: SettingsWindow = {
         let s = SettingsWindow(hkConfig)
         s.onChange = { [weak self] cfg in self?.applyHotKey(cfg) }
         return s
+    }()
+    private lazy var welcome: WelcomeWindow = {
+        let w = WelcomeWindow()
+        w.hotkeyText = hkConfig.displayString
+        return w
     }()
 
     func applicationDidFinishLaunching(_ n: Notification) {
@@ -429,16 +588,39 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(dictateItem)
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Sozlamalar…", action: #selector(openSettings), keyEquivalent: ","))
+        loginItem = NSMenuItem(title: "Login'da ishga tushirish", action: #selector(toggleLogin), keyEquivalent: "")
+        loginItem.state = LoginItem.isEnabled ? .on : .off
+        menu.addItem(loginItem)
         menu.addItem(NSMenuItem(title: "Accessibility ruxsatini ochish", action: #selector(openAX), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Yo'riqnoma…", action: #selector(openWelcome), keyEquivalent: ""))
+        menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Chiqish", action: #selector(quit), keyEquivalent: "q"))
         statusItem.menu = menu
 
         hotkey.install()
         NotificationCenter.default.addObserver(self, selector: #selector(toggle), name: .rubaiHotkey, object: nil)
 
-        // Accessibility tekshiruvi (kerak bo'lsa so'raydi)
-        let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-        _ = AXIsProcessTrustedWithOptions(opts)
+        // Birinchi ishga tushish — onboarding oynasi; aks holda jim Accessibility tekshiruvi
+        let d = UserDefaults.standard
+        if !d.bool(forKey: "didOnboard") {
+            d.set(true, forKey: "didOnboard")
+            LoginItem.set(true)                       // standart: login'da yonsin
+            loginItem.state = LoginItem.isEnabled ? .on : .off
+            welcome.show()
+        } else {
+            let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+            _ = AXIsProcessTrustedWithOptions(opts)
+        }
+    }
+
+    @objc private func toggleLogin() {
+        LoginItem.set(!LoginItem.isEnabled)
+        loginItem.state = LoginItem.isEnabled ? .on : .off
+    }
+
+    @objc private func openWelcome() {
+        welcome.hotkeyText = hkConfig.displayString
+        welcome.show()
     }
 
     // Yangi hotkey'ni qo'llab, saqlab, menyuni yangilaydi
