@@ -32,6 +32,16 @@ if [ ! -f "$WC/build-static/src/libwhisper.a" ]; then
     cmake --build "$WC/build-static" --config Release -j --target whisper
 fi
 
+# 2b) x86_64 (Intel) statik — universal ilova uchun (CPU, Metal'siz). Faqat Apple Silicon'da cross-compile.
+if [ "$(uname -m)" = "arm64" ] && [ ! -f "$WC/build-x64/src/libwhisper.a" ]; then
+    echo "==> whisper.cpp x86_64 (Intel, CPU) build..."
+    cmake -S "$WC" -B "$WC/build-x64" \
+        -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
+        -DGGML_NATIVE=OFF -DGGML_METAL=OFF -DBUILD_SHARED_LIBS=OFF \
+        -DWHISPER_BUILD_EXAMPLES=OFF -DWHISPER_BUILD_TESTS=OFF -DGGML_BLAS=OFF
+    cmake --build "$WC/build-x64" --config Release -j --target whisper
+fi
+
 # 3) Model — avval release'dan tayyor q8_0 (tez), bo'lmasa HuggingFace'dan + quant
 if [ ! -f "$MODEL" ]; then
     mkdir -p "$MODELDIR"

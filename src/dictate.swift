@@ -18,11 +18,18 @@ final class Whisper {
         return FileManager.default.fileExists(atPath: fb) ? fb : nil
     }
 
-    func transcribe(_ samples: [Float], done: @escaping (String) -> Void) {
+    func transcribe(_ samples: [Float], done: @escaping (String) -> Void,
+                    fail: @escaping (String) -> Void = { _ in }) {
         q.async {
             if !self.loaded {
-                guard let mp = self.modelPath(), rubai_load(mp) == 0 else {
-                    DispatchQueue.main.async { done("") }; return
+                guard let mp = self.modelPath() else {
+                    NSLog("[rubai] XATO: model fayli topilmadi (bundle/uy)")
+                    DispatchQueue.main.async { fail("Model fayli topilmadi") }; return
+                }
+                let rc = rubai_load(mp)
+                NSLog("[rubai] rubai_load(\(mp)) = \(rc)")
+                guard rc == 0 else {
+                    DispatchQueue.main.async { fail("Model yuklanmadi (kod \(rc))") }; return
                 }
                 self.loaded = true
             }
@@ -649,6 +656,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 self?.overlay.hide()
                 Inserter.insert(text)
                 self?.scheduleIdleUnload()
+            } fail: { [weak self] msg in
+                NSLog("[rubai] transcription XATO: \(msg)")
+                self?.overlay.show("⚠️ \(msg)", recording: false)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) { self?.overlay.hide() }
             }
         } else {
             rec.start { [weak self] ok in

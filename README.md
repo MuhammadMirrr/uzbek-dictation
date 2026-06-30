@@ -12,14 +12,14 @@ macOS'ning o'rnatilgan diktovkasi kabi, lekin **o'zbek tili uchun maxsus**, **bu
 
 - 🌐 **Tizim bo'ylab** — istalgan ilovada ishlaydi (global hotkey **⌃⌥D**)
 - 🇺🇿 **O'zbek tiliga maxsus** — `rubaiSTT v2 medium` modeli, lotin alifbosi
-- ⚡ **Metal tezlashtirish** — Apple Silicon GPU'da tez ishlaydi
+- ⚡ **Metal tezlashtirish** — Apple Silicon GPU'da tez · Intel'da CPU bilan ishlaydi (universal)
 - 🔌 **To'liq oflayn** — hech qanday server/internet kerak emas, ovoz qurilmangizdan chiqmaydi
 - 🪶 **Yengil** — menyu-bar ilovasi; model 3 daqiqa ishlatilmasa RAM'dan bo'shaydi
 - ⌨️ **Sozlanadigan tugma** — diktovka tugmasini Sozlamalar oynasidan o'zgartirish mumkin (standart ⌃⌥D)
 
 ## 📋 Talablar / Requirements
 
-- macOS 13+ (**Apple Silicon** — M1/M2/M3/M4/M5)
+- macOS 13+ · **Universal** — Apple Silicon (M1–M5, Metal bilan tez) yoki Intel (CPU, sekinroq)
 - [Homebrew](https://brew.sh)
 - Xcode Command Line Tools (`xcode-select --install`)
 - ~1 GB disk (model ~820 MB, q8_0)
@@ -90,7 +90,7 @@ Natija: `dist/RubaiSTT-Dictation.dmg`. Skript "Developer ID Application" sertifi
 
 - Tayyor DMG **Developer ID bilan imzolangan** (hardened runtime). Notarize keyinroq qo'shiladi — shu sababli birinchi ochishda yuqoridagi bir martalik qadam kerak. Manbadan build (`setup.sh`) esa **ad-hoc imzolangan** (lokal, Gatekeeper bloklamaydi).
 - App Store'ga **chiqmaydi** — tizim bo'ylab matn yozish (synthetic ⌘V) sandbox'da taqiqlangan; shuning uchun Developer ID orqali tarqatiladi.
-- Faqat **Apple Silicon** (Metal). Intel Mac'lar sinalmagan.
+- **Universal binary** — Apple Silicon (Metal GPU) va Intel (CPU). Intel'da sezilarli sekinroq, lekin ishlaydi.
 
 ## 🛠 Texnik tafsilotlar
 
