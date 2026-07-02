@@ -20,7 +20,6 @@ if ! command -v brew >/dev/null 2>&1; then
     echo "Homebrew kerak: https://brew.sh" >&2; exit 1
 fi
 command -v cmake  >/dev/null 2>&1 || { echo "==> cmake o'rnatilmoqda";  brew install cmake; }
-command -v ffmpeg >/dev/null 2>&1 || { echo "==> ffmpeg o'rnatilmoqda"; brew install ffmpeg; }
 
 # 2) whisper.cpp (Metal, statik)
 if [ ! -f "$WC/build-static/src/libwhisper.a" ]; then
